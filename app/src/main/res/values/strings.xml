@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="toka_logo_white_300ppi">Toka</string>
+    <string name="title_activity_login">login</string>
 </resources>
