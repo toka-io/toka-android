@@ -15,11 +15,11 @@
         android:layout_alignParentStart="true"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@mipmap/toka_logo_white_300ppi" />
+        android:src="@drawable/toka_logo_new_white_512x" />
 
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:id="@+id/Username"
         android:layout_below="@+id/Toka"
         android:layout_alignRight="@+id/Password"
@@ -37,7 +37,7 @@
 
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/Password"
@@ -68,6 +68,8 @@
         android:layout_alignLeft="@+id/Password"
         android:layout_alignStart="@+id/Password"
         android:focusable="true"
-        android:enabled="true" />
+        android:enabled="true"
+        android:onClick="createNewUser();"
+        android:nestedScrollingEnabled="false" />
 
 </RelativeLayout>

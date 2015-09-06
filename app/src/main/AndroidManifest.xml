@@ -5,15 +5,15 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Toka"
         android:theme="@style/Theme.AppCompat.NoActionBar" >
         <activity
             android:name=".ChatroomActivity"
-            android:label="@string/app_name" >
+            android:label="Toka" >
         </activity>
         <activity
             android:name=".login"
-            android:label="@string/title_activity_login" >
+            android:label="Toka" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
