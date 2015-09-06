@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import org.json.JSONObject;
 
 public class login extends AppCompatActivity {
 
@@ -11,6 +14,26 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+    }
+
+    private User currentUser;
+    private EditText username;
+    private EditText password;
+    private JSONObject loginArray;
+
+    public void createNewUser() {
+        // Set username and password into the private variable
+        username = (EditText) findViewById(R.id.Username);
+        password = (EditText) findViewById(R.id.Password);
+
+        currentUser.username = username.getText().toString();
+        currentUser.password = password.getText().toString();
+
+        login(currentUser);
+    }
+
+    private void login(User user) {
+
     }
 
     @Override
