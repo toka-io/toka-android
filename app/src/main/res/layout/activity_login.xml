@@ -4,7 +4,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context="io.toka.android.login"
-    android:background="#FF852B">
+    android:background="#252525"
+    android:clickable="false"
+    android:nestedScrollingEnabled="false">
 
     <ImageView
         android:layout_width="match_parent"
@@ -62,14 +64,15 @@
         android:layout_below="@+id/Password"
         android:layout_marginTop="30dp"
         android:clickable="true"
-        android:background="#FFAF57"
+        android:background="#3a4f5d"
         android:layout_alignRight="@+id/Password"
         android:layout_alignEnd="@+id/Password"
         android:layout_alignLeft="@+id/Password"
         android:layout_alignStart="@+id/Password"
         android:focusable="true"
         android:enabled="true"
-        android:onClick="createNewUser();"
-        android:nestedScrollingEnabled="false" />
+        android:onClick="login"
+        android:nestedScrollingEnabled="false"
+        android:alpha="0.9" />
 
 </RelativeLayout>
