@@ -1,9 +1,7 @@
 package io.toka.android;
 
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,7 +88,7 @@ public class ChatroomActivity extends AppCompatActivity {
 
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("username", "Bob620");
+                    json.put("username", username);
                     json.put("chatroomId", "toka");
 
                     socket.emit("join", json);
