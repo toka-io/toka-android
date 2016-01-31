@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +28,6 @@ public class login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -37,7 +35,16 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
+    private void requestLogin() {
+        findViewById(R.id.signInView).setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+        findViewById(R.id.errorMessage).setVisibility(View.VISIBLE);
+    }
+
     public void login(View v) {
+        findViewById(R.id.signInView).setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         getUser();
     }
 
@@ -52,10 +59,13 @@ public class login extends AppCompatActivity {
 
         loginAPI User = new Gson().fromJson(performPostCall(user), loginAPI.class);
         if (User.status.equals("200")) {
-            Log.i("Login", User.message);
+            ((Info) this.getApplication()).setUsername(username.getText().toString());
+
             Intent i = new Intent(getApplicationContext(), ChatroomActivity.class);
             startActivity(i);
             finish();
+        } else {
+            requestLogin();
         }
     }
 

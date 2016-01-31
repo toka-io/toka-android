@@ -8,71 +8,102 @@
     android:clickable="false"
     android:nestedScrollingEnabled="false">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/Toka"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/toka_logo_new_white_512x" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/signInView">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:id="@+id/Username"
-        android:layout_below="@+id/Toka"
-        android:layout_alignRight="@+id/Password"
-        android:layout_alignEnd="@+id/Password"
-        android:layout_alignLeft="@+id/Password"
-        android:layout_alignStart="@+id/Password"
-        android:background="#FFF"
-        android:editable="true"
-        android:hint="Username"
-        android:layout_marginTop="0dp"
-        android:inputType="text"
-        android:textColor="#000"
-        android:textColorHint="#d3d3d3"
-        android:focusable="true" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/Toka"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/toka_logo_new_white_512x"
+            android:contentDescription="Toka"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/Password"
-        android:layout_marginTop="20dp"
-        android:autoText="false"
-        android:background="#FFF"
-        android:clickable="true"
-        android:editable="true"
-        android:focusable="true"
-        android:hint="Password"
-        android:password="true"
-        android:layout_below="@+id/Username"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000"
-        android:textColorHint="#d3d3d3" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign in"
+            android:id="@+id/SignIn"
+            android:layout_below="@+id/Password"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:background="#3a4f5d"
+            android:layout_alignRight="@+id/Password"
+            android:layout_alignEnd="@+id/Password"
+            android:layout_alignLeft="@+id/Password"
+            android:layout_alignStart="@+id/Password"
+            android:focusable="true"
+            android:enabled="true"
+            android:onClick="login"
+            android:nestedScrollingEnabled="false"
+            android:alpha="0.9"
+            android:layout_gravity="right|bottom" />
 
-    <Button
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:id="@+id/Username"
+            android:layout_below="@+id/Toka"
+            android:layout_alignRight="@+id/Password"
+            android:layout_alignEnd="@+id/Password"
+            android:layout_alignLeft="@+id/Password"
+            android:layout_alignStart="@+id/Password"
+            android:background="#FFF"
+            android:editable="false"
+            android:hint="Username"
+            android:layout_marginTop="0dp"
+            android:inputType="text"
+            android:textColor="#000"
+            android:textColorHint="#d3d3d3"
+            android:focusable="true"
+            android:layout_gravity="center" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/Password"
+            android:layout_marginTop="20dp"
+            android:autoText="false"
+            android:background="#FFF"
+            android:clickable="true"
+            android:editable="false"
+            android:focusable="true"
+            android:hint="Password"
+            android:password="true"
+            android:layout_below="@+id/Username"
+            android:layout_centerHorizontal="true"
+            android:textColor="#000"
+            android:textColorHint="#d3d3d3"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Username or Password was Incorrect"
+            android:id="@+id/errorMessage"
+            android:layout_alignBottom="@+id/Toka"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in"
-        android:id="@+id/SignIn"
-        android:layout_below="@+id/Password"
-        android:layout_marginTop="30dp"
-        android:clickable="true"
-        android:background="#3a4f5d"
-        android:layout_alignRight="@+id/Password"
-        android:layout_alignEnd="@+id/Password"
-        android:layout_alignLeft="@+id/Password"
-        android:layout_alignStart="@+id/Password"
-        android:focusable="true"
-        android:enabled="true"
-        android:onClick="login"
-        android:nestedScrollingEnabled="false"
-        android:alpha="0.9" />
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

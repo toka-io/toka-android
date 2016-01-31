@@ -1,26 +1,155 @@
 package io.toka.android;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class ChatroomActivity extends AppCompatActivity {
 
+    public class Message {
+        String text;
+        String timestamp;
+        String username;
+        String chatroomId;
+    }
 
-
-
-
-
-
-
-
-
+    Socket socket = IO.socket(URI.create("https://www.toka.io:1337"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        final String username = ((Info) this.getApplication()).getUsername();
+
+        final SimpleDateFormat userDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a", Locale.US);
+        final SimpleDateFormat jsonDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a", Locale.US);
+        userDateFormat.setTimeZone(TimeZone.getDefault());
+        jsonDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        ListView lv = (ListView) findViewById(R.id.listView);
+
+        final ArrayList<ChatMessage> ChatMessages = new ArrayList<ChatMessage>();
+        final ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(this, ChatMessages);
+
+        lv.setAdapter(chatMessageAdapter);
+
+        Button button = (Button) findViewById(R.id.Send);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                EditText input = (EditText) findViewById(R.id.input);
+
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("username", username);
+                    json.put("chatroomId", "toka");
+                    json.put("timestamp", userDateFormat.format(new Date()));
+                    json.put("text", input.getText().toString());
+
+                    ChatMessage message = new ChatMessage(json.getString("text"), json.getString("username"), json.getString("timestamp"));
+                    ChatMessages.add(message);
+
+                    socket.emit("sendMessage", json);
+                    chatMessageAdapter.notifyDataSetChanged();
+
+                    input.setText("");
+                } catch (JSONException ignored) {
+                }
+            }
+        });
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("username", "Bob620");
+                    json.put("chatroomId", "toka");
+
+                    socket.emit("join", json);
+                } catch (JSONException ignored) {
+                }
+
+            }
+        });
+
+        socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+            }
+        });
+
+        socket.on("history", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+            }
+        });
+
+        socket.on("receiveMessage", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Message json = new Gson().fromJson(args[0].toString(), Message.class);
+                            ChatMessage message = new ChatMessage(json.text, json.username, userDateFormat.format(jsonDateFormat.parse(json.timestamp)));
+
+                            ChatMessages.add(message);
+
+                            chatMessageAdapter.notifyDataSetChanged();
+                        } catch (ParseException ignored) {
+                        }
+                    }
+                });
+            }
+        });
+
+        socket.on("activeViewerCount", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+            }
+        });
+
+        socket.on("users", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+            }
+        });
+
+        socket.connect();
     }
 
     @Override
