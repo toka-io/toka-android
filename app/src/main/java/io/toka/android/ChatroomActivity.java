@@ -1,5 +1,7 @@
 package io.toka.android;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,13 +30,6 @@ import io.socket.emitter.Emitter;
 
 public class ChatroomActivity extends AppCompatActivity {
 
-    public class Message {
-        String text;
-        String timestamp;
-        String username;
-        String chatroomId;
-    }
-
     Socket socket = IO.socket(URI.create("https://www.toka.io:1337"));
 
     @Override
@@ -44,14 +39,17 @@ public class ChatroomActivity extends AppCompatActivity {
 
         final String username = ((Info) this.getApplication()).getUsername();
 
-        final SimpleDateFormat userDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a", Locale.US);
-        final SimpleDateFormat jsonDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a", Locale.US);
-        userDateFormat.setTimeZone(TimeZone.getDefault());
+        final SimpleDateFormat userDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
+        final SimpleDateFormat jsonDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
         jsonDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        userDateFormat.setTimeZone(TimeZone.getDefault());
+
+        final MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.chat);
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         ListView lv = (ListView) findViewById(R.id.listView);
 
-        final ArrayList<ChatMessage> ChatMessages = new ArrayList<ChatMessage>();
+        final ArrayList<ChatMessage> ChatMessages = ((Info) this.getApplication()).getChatMessages();
         final ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(this, ChatMessages);
 
         lv.setAdapter(chatMessageAdapter);
@@ -120,11 +118,13 @@ public class ChatroomActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             Message json = new Gson().fromJson(args[0].toString(), Message.class);
+
                             ChatMessage message = new ChatMessage(json.text, json.username, userDateFormat.format(jsonDateFormat.parse(json.timestamp)));
 
                             ChatMessages.add(message);
 
                             chatMessageAdapter.notifyDataSetChanged();
+                            mPlayer.start();
                         } catch (ParseException ignored) {
                         }
                     }
