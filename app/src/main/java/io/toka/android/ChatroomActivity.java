@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,15 +115,15 @@ public class ChatroomActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            Message json = new Gson().fromJson(args[0].toString(), Message.class);
+                            JSONObject json = new JSONObject(args[0].toString());
 
-                            ChatMessage message = new ChatMessage(json.text, json.username, userDateFormat.format(jsonDateFormat.parse(json.timestamp)));
+                            ChatMessage message = new ChatMessage(json.getString("text"), json.getString("username"), userDateFormat.format(jsonDateFormat.parse(json.getString("timestamp"))));
 
                             ChatMessages.add(message);
 
                             chatMessageAdapter.notifyDataSetChanged();
                             mPlayer.start();
-                        } catch (ParseException ignored) {
+                        } catch (Exception ignored) {
                         }
                     }
                 });
