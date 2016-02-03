@@ -27,126 +27,164 @@ import javax.net.ssl.HttpsURLConnection;
 public class login extends AppCompatActivity {
 
     @Override
+    /*
+      Objective:
+      Set up StrictMode thread policy
+      setContentView Brings up login screen
+    */
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // Creates a new thread
+        StrictMode.setThreadPolicy(policy); // Initiates new thread
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
+        super.onCreate(savedInstanceState); // Runs original onCreate
+        setContentView(R.layout.activity_login); // sets display to activity login
     }
 
+    /*
+        Objective:
+        Presents login error message
+    */
     private void requestLogin() {
-        findViewById(R.id.signInView).setVisibility(View.VISIBLE);
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
+        findViewById(R.id.signInView).setVisibility(View.VISIBLE); // Sign in layout becomes visible
+        findViewById(R.id.progressBar).setVisibility(View.GONE); // Progress bar disappears
 
-        findViewById(R.id.errorMessage).setVisibility(View.VISIBLE);
+        findViewById(R.id.errorMessage).setVisibility(View.VISIBLE); // Error message becomes visible
     }
 
+    /*
+        Objective:
+        Presents progress bar to main page upon successful login
+    */
     public void login(View v) {
-        findViewById(R.id.signInView).setVisibility(View.GONE);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-        getUser();
+        findViewById(R.id.signInView).setVisibility(View.GONE); //Sign in layout disappears
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE); // Progress bar becomes visible
+
+        getUser(); // Starts login process
     }
 
+    /*
+        Objective:
+        Find username and password input
+        Compares username and password to Toka directory
+        Then logs in the user
+    */
     private void getUser() {
-        EditText username = (EditText) findViewById(R.id.Username);
-        EditText password = (EditText) findViewById(R.id.Password);
+        EditText username = (EditText) findViewById(R.id.Username); // Allows input for Username text box
+        EditText password = (EditText) findViewById(R.id.Password); // Allows input for Password text box
 
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<String, String>(); // Group Username and Password
 
-        user.put("username", username.getText().toString());
-        user.put("password", password.getText().toString());
+        user.put("username", username.getText().toString()); // Sets username EditText to a string
+        user.put("password", password.getText().toString()); // Sets password EditText to a string
 
         loginAPI User = new Gson().fromJson(performPostCall(user), loginAPI.class);
-        if (User.status.equals("200")) {
-            ((Info) this.getApplication()).setUsername(username.getText().toString());
 
-            Intent i = new Intent(getApplicationContext(), ChatroomActivity.class);
-            startActivity(i);
-            finish();
+
+        if (User.status.equals("200")) { // If user status equals 200 then login was successful
+            ((Info) this.getApplication()).setUsername(username.getText().toString()); // Sets username in the chatroom
+
+            Intent i = new Intent(getApplicationContext(), ChatroomActivity.class); // Creates a new chatroom activity
+
+            startActivity(i); // Starts the chatroom activity
+
+            finish(); // ends login.java
         } else {
-            requestLogin();
+            requestLogin(); // presents error message
         }
     }
 
+    /*
+        Objective:
+        Allows easy transformation to web Json
+    */
     private class loginAPI {
-        String status;
-        String message;
-        String sessionId;
+        String status; // Response code, http
+        String message; // Presents text status
+        String sessionId; // Session ID
     }
 
+    /*
+        Objective:
+        Sends login to server
+        Reads server resposne
+
+    */
     private String performPostCall(HashMap<String, String> postDataParams) {
         URL url;
         String response = "";
 
         try {
-            url = new URL("https://www.toka.io/api/login");
+            url = new URL("https://www.toka.io/api/login"); //Sets URL to said name
 
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection(); // Creates new secure connection through URL
+            conn.setReadTimeout(15000); // 15 seconds to read Timeout
+            conn.setConnectTimeout(15000); // 15 seconds to connect Timeout
+            conn.setRequestMethod("POST"); // Secures data sending
+            conn.setDoInput(true); // Allows input application
+            conn.setDoOutput(true); // Allows output from server
 
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
+            OutputStream os = conn.getOutputStream(); // creates output stream
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); // creates buffered writer using Output Stream
+            writer.write(getPostDataString(postDataParams)); // Takes Hashmap and changes it to a string that is encoded in UTF-8
 
-            writer.flush();
-            writer.close();
-            os.close();
-            int responseCode=conn.getResponseCode();
+            writer.flush(); // clears information
+            writer.close(); // closes writer
+            os.close(); //close output stream
+            int responseCode=conn.getResponseCode(); // Determines if information has been sent
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
+            if (responseCode == HttpsURLConnection.HTTP_OK) { // If information was successfully sent
                 String line;
-                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line=br.readLine()) != null) {
+                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream())); // Creates Buffer Reader for Input Stream
+                while ((line=br.readLine()) != null) { // Construct server response
                     response+=line;
                 }
             }
-            else {
-                response="";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (Exception e) { // Catches errors
+            e.printStackTrace(); // Prints errors
         }
-        return response;
+        return response; // Returns server response
     }
 
     private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
+        StringBuilder result = new StringBuilder(); // Creates string builder
+        boolean first = true; //
+
+        /*
+            Objective:
+            Creates string to be sent to server
+        */
         for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first) {
-                first = false;
+            if (first) { // First item in the list do not put in &
+                first = false; // Sets first value to false to skip
             } else {
-                result.append("&");
+                result.append("&"); // Adds and after the first value
             }
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8")); // Gets Key
+            result.append("="); // adds an =
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8")); // Gets Value
         }
 
-        return result.toString();
+        return result.toString(); // Converts result into a string
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+
+        getMenuInflater().inflate(R.menu.menu_login, menu); // This adds items to the action bar if it is present.
         return true;
     }
 
     @Override
+    /*
+        Objective:
+         Handle action bar items
+    */
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+           int id = item.getItemId(); // Sets selected ID to id
+
         if (id == R.id.action_settings) {
             return true;
         }

@@ -1,5 +1,7 @@
 package io.toka.android;
-
+/*
+    Preintiates the ability to store and retrieve chat messages
+*/
 public class ChatMessage {
     private String text;
     private String username;
