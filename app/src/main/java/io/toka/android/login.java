@@ -1,9 +1,12 @@
 package io.toka.android;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.StrictMode;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +36,31 @@ public class login extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //SMS();
+    }
+
+    // Not Working
+    private void SMS() {
+
+        String[] projection = {Telephony.Sms.Sent.DATE};
+        String selectionClause = "";
+        String[] selectionArgs = {""};
+        String orderBy = Telephony.Sms.Sent.DATE;
+
+        Cursor sms = getContentResolver().query(Telephony.Sms.Sent.CONTENT_URI, projection, selectionClause, selectionArgs, orderBy);
+
+        int index = sms.getColumnIndex(Telephony.Sms.Sent.DATE);
+
+        while (sms.moveToNext()) {
+            String newWord = sms.getString(index);
+
+            Log.i("Date", newWord);
+        }
+
+
+        sms.close();
+
     }
 
     private void requestLogin() {
@@ -54,7 +82,7 @@ public class login extends AppCompatActivity {
 
         HashMap<String, String> user = new HashMap<String, String>();
 
-        user.put("username", username.getText().toString());
+        user.put("username", username.getText().toString().toLowerCase());
         user.put("password", password.getText().toString());
 
         loginAPI User = new Gson().fromJson(performPostCall(user), loginAPI.class);
@@ -106,11 +134,7 @@ public class login extends AppCompatActivity {
                     response+=line;
                 }
             }
-            else {
-                response="";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
         return response;
     }

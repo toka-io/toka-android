@@ -4,6 +4,7 @@ public class ChatMessage {
     private String text;
     private String username;
     private String timestamp;
+    private String chatroomName;
 
     public ChatMessage(String text, String username, String timestamp) {
         this.text = text;
@@ -21,5 +22,13 @@ public class ChatMessage {
 
     public String getTimestamp() {
         return this.timestamp;
+    }
+
+    public String getChatroomName() {
+        return this.chatroomName;
+    }
+
+    public void setChatroomName(String chatroomName) {
+        this.chatroomName = chatroomName;
     }
 }
