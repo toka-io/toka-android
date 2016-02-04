@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ChatMessageAdapter extends BaseAdapter {
+public class HistoryAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private ArrayList<ChatMessage> objects;
@@ -20,7 +20,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         TextView Timestamp;
     }
 
-    public ChatMessageAdapter(Context context, ArrayList<ChatMessage> objects) {
+    public HistoryAdapter(Context context, ArrayList<ChatMessage> objects) {
         inflater = LayoutInflater.from(context);
         this.objects = objects;
     }

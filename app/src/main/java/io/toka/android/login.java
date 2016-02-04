@@ -6,13 +6,14 @@ import android.os.StrictMode;
 import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,27 +38,35 @@ public class login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //SMS();
+        //getSMS();
+        //sendSMS();
+    }
+
+    private void sendSMS() {
+        SmsManager manager = SmsManager.getDefault();
+
+        manager.sendTextMessage("+xxxxxxxxxx", null, "Meow", null, null);
     }
 
     // Not Working
-    private void SMS() {
+    private void getSMS() {
 
-        String[] projection = {Telephony.Sms.Sent.DATE};
-        String selectionClause = "";
+        String[] projection = {Telephony.Sms.READ};
+        String selectionClause = null;
         String[] selectionArgs = {""};
-        String orderBy = Telephony.Sms.Sent.DATE;
+        String orderBy = Telephony.Sms.DEFAULT_SORT_ORDER;
 
-        Cursor sms = getContentResolver().query(Telephony.Sms.Sent.CONTENT_URI, projection, selectionClause, selectionArgs, orderBy);
+        selectionArgs[0] = "";
 
-        int index = sms.getColumnIndex(Telephony.Sms.Sent.DATE);
+        Cursor sms = getContentResolver().query(Telephony.Sms.CONTENT_URI, projection, selectionClause, selectionArgs, orderBy);
+
+        int index = sms.getColumnIndex(Telephony.Sms.READ);
 
         while (sms.moveToNext()) {
             String newWord = sms.getString(index);
 
             Log.i("Date", newWord);
         }
-
 
         sms.close();
 
@@ -82,25 +91,23 @@ public class login extends AppCompatActivity {
 
         HashMap<String, String> user = new HashMap<String, String>();
 
-        user.put("username", username.getText().toString().toLowerCase());
-        user.put("password", password.getText().toString());
+        user.put("username", username.getText().toString().toLowerCase().trim());
+        user.put("password", password.getText().toString().trim());
 
-        loginAPI User = new Gson().fromJson(performPostCall(user), loginAPI.class);
-        if (User.status.equals("200")) {
-            ((Info) this.getApplication()).setUsername(username.getText().toString());
+        try {
+            JSONObject User = new JSONObject(performPostCall(user));
+            if (User.getString("status").equals("200")) {
+                ((Info) this.getApplication()).setUsername(username.getText().toString().toLowerCase().trim());
 
-            Intent i = new Intent(getApplicationContext(), ChatroomActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-            requestLogin();
+                Intent i = new Intent(getApplicationContext(), ChatroomActivity.class);
+                i.putExtra("Id", "toka");
+                startActivity(i);
+                finish();
+            } else {
+                requestLogin();
+            }
+        } catch (Exception Ignored) {
         }
-    }
-
-    private class loginAPI {
-        String status;
-        String message;
-        String sessionId;
     }
 
     private String performPostCall(HashMap<String, String> postDataParams) {

@@ -1,34 +1,34 @@
 package io.toka.android;
 
 public class ChatMessage {
-    private String text;
-    private String username;
-    private String timestamp;
-    private String chatroomName;
+    private String Text;
+    private String Username;
+    private String Timestamp;
+    private String ChatroomName;
 
     public ChatMessage(String text, String username, String timestamp) {
-        this.text = text;
-        this.username = username;
-        this.timestamp = timestamp;
+        Text = text;
+        Username = username;
+        Timestamp = timestamp;
     }
 
     public String getText() {
-        return this.text;
+        return Text;
     }
 
     public String getUsername() {
-        return this.username;
+        return Username;
     }
 
     public String getTimestamp() {
-        return this.timestamp;
+        return Timestamp;
     }
 
     public String getChatroomName() {
-        return this.chatroomName;
+        return ChatroomName;
     }
 
     public void setChatroomName(String chatroomName) {
-        this.chatroomName = chatroomName;
+        ChatroomName = chatroomName;
     }
 }
