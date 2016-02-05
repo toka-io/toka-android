@@ -4,12 +4,14 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -32,10 +34,16 @@ public class ChatroomActivity extends AppCompatActivity {
 
     Socket socket = IO.socket(URI.create("https://www.toka.io:1337"));
 
+    int smsCounter = 2;
+
+    EditText txtphoneNo; // EditText to store the phone number
+    EditText txtmessage; // EditText to store the text message
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
 
         final String username = ((Info) this.getApplication()).getUsername();
 
@@ -52,9 +60,42 @@ public class ChatroomActivity extends AppCompatActivity {
         final ArrayList<ChatMessage> ChatMessages = ((Info) this.getApplication()).getChatMessages();
         final ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(this, ChatMessages);
 
+       findViewById(R.id.smsLayout).setVisibility(View.GONE);
+
         lv.setAdapter(chatMessageAdapter);
 
         Button button = (Button) findViewById(R.id.Send);
+
+        Button messageButton = (Button) findViewById(R.id.SMS); // Button for switching views to the text view
+
+        Button txtSendButton = (Button) findViewById(R.id.sendText); // Button for sending the text message
+
+        messageButton.setOnClickListener(new View.OnClickListener() { // The activator to show the text view or to put away the text view
+            public void onClick(View v) {
+
+                smsCounter++;
+
+                if (smsCounter % 2 == 1) { // To see if smsCounter is odd, if its odd then getSMS is called, if not getSMS disappears if once called
+                    textScreen();
+                } else { // Takes away the text view and shows the chatroom view
+                    findViewById(R.id.smsLayout).setVisibility(View.INVISIBLE);
+
+                    findViewById(R.id.listView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.input).setVisibility(View.VISIBLE);
+                    findViewById(R.id.Send).setVisibility(View.VISIBLE);
+                    findViewById(R.id.ChatroomName).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imageView).setVisibility(View.VISIBLE);
+                }
+
+
+            }
+        });
+
+        txtSendButton.setOnClickListener(new View.OnClickListener() { // The send activator to send texts
+            public void onClick(View arg0) {
+                sendSMS();
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -170,4 +211,58 @@ public class ChatroomActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+        Objective:
+        Set the chatroom view invisible
+        Set text view to visible
+        Enable EditText for txtphoneNo and txtmessage
+    */
+    public void textScreen() {
+
+        findViewById(R.id.smsLayout).setVisibility(View.VISIBLE); // Sign in layout becomes visible
+
+        findViewById(R.id.listView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.input).setVisibility(View.INVISIBLE);
+        findViewById(R.id.Send).setVisibility(View.INVISIBLE);
+        findViewById(R.id.ChatroomName).setVisibility(View.INVISIBLE);
+        findViewById(R.id.imageView).setVisibility(View.INVISIBLE);
+
+
+        txtphoneNo = (EditText) findViewById(R.id.phoneNo); // Allows input for Username text box
+        txtmessage = (EditText) findViewById(R.id.message); // Allows input for Username text box
+
+    }
+
+    /*
+        Objective:
+        Convert txtphoneNo and txtmessage to strings
+        Send SMS with message of successful
+    */
+    private void sendSMS() {
+        String textMessages[] = new String[0];
+        int textMessageCounter = 0;
+
+        String number = txtphoneNo.getText().toString(); // converts txtphoneNo to a string
+        String text = txtmessage.getText().toString(); // converts txtmessage to a string
+
+        SmsManager manager = SmsManager.getDefault();
+
+        manager.sendTextMessage(number, null, text, null, null); // Sends the text message to stored telephone number
+        Toast.makeText(getApplication(), "Text sent", Toast.LENGTH_LONG).show(); // Displays message for successful sms delivery
+
+
+        // testing idea
+        //textMessages[textMessageCounter] = text;
+
+
+
+        textMessageCounter++;
+
+    }
+
+
+
+
+
 }

@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".chatroom">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".chatroom"
+    android:id="@+id/Chatroomm">
 
     <ListView
         android:layout_width="wrap_content"
@@ -16,7 +17,9 @@
         android:listSelector="@android:color/transparent"
         android:headerDividersEnabled="false"
         android:focusable="false"
-        android:layout_below="@+id/ChatroomName" />
+        android:layout_below="@+id/ChatroomName"
+        android:visibility="visible"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -25,8 +28,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/Send"
-        android:layout_toStartOf="@+id/Send" />
+        android:layout_toStartOf="@+id/Send"
+        android:visibility="visible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -35,10 +38,10 @@
         android:id="@+id/Send"
         android:clickable="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:nestedScrollingEnabled="false"
-        android:onClick="addItem" />
+        android:onClick="addItem"
+        android:visibility="visible"
+        android:layout_alignEnd="@+id/SMS" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,7 +52,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/Send" />
+        android:layout_toStartOf="@+id/Send"
+        android:visibility="visible" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -57,7 +61,68 @@
         android:id="@+id/imageView"
         android:src="@drawable/user"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ChatroomName"
-        android:layout_above="@+id/listView" />
+        android:layout_above="@+id/listView"
+        android:visibility="visible"
+        android:layout_alignEnd="@+id/SMS" />
+
+    <ToggleButton
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SMS"
+        android:id="@+id/SMS"
+        android:layout_alignTop="@+id/listView"
+        android:layout_alignEnd="@+id/listView"
+        android:textOn="SMS"
+        android:textOff="SMS"
+        android:checked="false"
+        android:clickable="true"
+        android:enabled="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="visible"
+        android:id="@+id/smsLayout"
+        android:clickable="false">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoneNo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="44dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/message"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:id="@+id/sendText"
+            android:layout_alignBottom="@+id/message"
+            android:layout_alignParentEnd="true"
+            android:enabled="true"
+            android:clickable="true" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/messageView"
+            android:layout_below="@+id/phoneNo"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/message"
+            tools:listitem="@android:layout/select_dialog_item" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

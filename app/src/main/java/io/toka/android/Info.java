@@ -23,4 +23,6 @@ public class Info extends Application {
     public ArrayList<ChatMessage> getChatMessages() {
         return ChatMessages;
     }
+
+
 }

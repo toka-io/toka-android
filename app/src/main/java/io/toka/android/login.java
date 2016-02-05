@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.telephony.SmsManager;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -39,40 +41,32 @@ public class login extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // Creates a new thread
         StrictMode.setThreadPolicy(policy); // Initiates new thread
 
-<<<<<<< HEAD
 
         super.onCreate(savedInstanceState); // Runs original onCreate
         setContentView(R.layout.activity_login); // sets display to activity login
-=======
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        //SMS();
+
+
     }
 
     // Not Working
-    private void SMS() {
+    /*
+    private void getSMS() {
 
-        String[] projection = {Telephony.Sms.Sent.DATE};
-        String selectionClause = "";
-        String[] selectionArgs = {""};
-        String orderBy = Telephony.Sms.Sent.DATE;
+        findViewById(R.id.smsLayout).setVisibility(View.VISIBLE); // Sign in layout becomes visible
 
-        Cursor sms = getContentResolver().query(Telephony.Sms.Sent.CONTENT_URI, projection, selectionClause, selectionArgs, orderBy);
+        EditText txtphoneNo = (EditText) findViewById(R.id.phoneNo); // Allows input for Username text box
+        EditText textmessage = (EditText) findViewById(R.id.message); // Allows input for Username text box
 
-        int index = sms.getColumnIndex(Telephony.Sms.Sent.DATE);
-
-        while (sms.moveToNext()) {
-            String newWord = sms.getString(index);
-
-            Log.i("Date", newWord);
-        }
-
-
-        sms.close();
-
->>>>>>> refs/remotes/origin/Bob620-master
     }
+    */
+
+    private void sendSMS() {
+        SmsManager manager = SmsManager.getDefault();
+
+        manager.sendTextMessage("+XXXXXXX", null, "Meow", null, null);
+    }
+
 
     /*
         Objective:
@@ -108,19 +102,15 @@ public class login extends AppCompatActivity {
 
         HashMap<String, String> user = new HashMap<String, String>(); // Group Username and Password
 
-<<<<<<< HEAD
-        user.put("username", username.getText().toString()); // Sets username EditText to a string
+        user.put("username", username.getText().toString().toLowerCase()); // Sets username EditText to a string
         user.put("password", password.getText().toString()); // Sets password EditText to a string
-=======
-        user.put("username", username.getText().toString().toLowerCase());
-        user.put("password", password.getText().toString());
->>>>>>> refs/remotes/origin/Bob620-master
+
 
         loginAPI User = new Gson().fromJson(performPostCall(user), loginAPI.class);
 
 
         if (User.status.equals("200")) { // If user status equals 200 then login was successful
-            ((Info) this.getApplication()).setUsername(username.getText().toString()); // Sets username in the chatroom
+            ((Info) this.getApplication()).setUsername(username.getText().toString().toLowerCase()); // Sets username in the chatroom
 
             Intent i = new Intent(getApplicationContext(), ChatroomActivity.class); // Creates a new chatroom activity
 
@@ -178,13 +168,11 @@ public class login extends AppCompatActivity {
                     response+=line;
                 }
             }
-<<<<<<< HEAD
 
-        } catch (Exception e) { // Catches errors
-            e.printStackTrace(); // Prints errors
-=======
-        } catch (Exception ignore) {
->>>>>>> refs/remotes/origin/Bob620-master
+
+
+        } catch (Exception ignore) { //Catches error and then ignores it
+
         }
         return response; // Returns server response
     }
